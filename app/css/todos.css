@@ -1,0 +1,25 @@
+.form-create-todo {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  display: table;
+  margin-bottom:25px;
+}
+
+.form-create-todo input[type="text"] {
+  margin-right: 25px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-create-todo input[type="checkbox"] {
+  margin-right: 25px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+button#logout {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width:100px;
+}

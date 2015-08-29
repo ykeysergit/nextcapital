@@ -1,0 +1,70 @@
+<div class="container" ng-controller="TodosController">
+	<button id="logout" class="btn btn-md btn-primary btn-block" type="button" ng-click="logout()">Logout</button>
+
+	<form class="form-create-todo form-inline">
+		<div class="form-group">
+			<label for="todoCreateDescInput">Description</label>
+			<input id="todoCreateDescInput" type="text" 
+			ng-model="todo_placeholder.description" class="form-control"/>
+		</div>
+  		
+  		
+  		<div class="checkbox ">
+  			<label for="todoCreateCompletedInput">Is completed?</label>
+  			<input id="todoCreateCompletedInput" type="checkbox" ng-model="todo_placeholder.is_complete" 
+  			ng-readonly="false"/>
+  		</div>
+  			
+  		<button class="btn btn-sm btn-primary" type="button" ng-click="create_todo()">Save</button>
+  	</form>
+
+	<table id="todosTable" class="table table-striped table-bordered">
+	  <thead>
+        <tr>
+          <th>Todo Id</th>
+          <th>Description</th>
+          <th>Completed?</th>
+        </tr>
+      </thead>
+      
+      <tbody ng-repeat="todo in todos">
+      	<tr class="index">
+      		<td>{{todo.id}}</td>		
+      		<td>
+      			<input ng-model="todo.description" type"text"
+      				ng-change="update_todo(todo.id)"
+      			/>
+      		</td>
+      		
+      		<td>
+      			<input ng-model="todo.is_complete" type="checkbox"
+      			ng-change="update_todo(todo.id)" 
+      			ng-checked="todo.is_complete" ng-readonly="false"/>
+      		</td>
+      	</tr>
+      </tbody>
+      
+      <tbody ng-if="todos.length==0">
+      	<tr>
+      		<td colspan=3>
+      		No todos available
+      		</td>
+      	</tr>
+      </tbody>
+	</table>
+</div>
+
+<script>
+	var fixHelperModified = function(e, tr) {
+	    var $originals = tr.children();
+	    var $helper = tr.clone();
+	    $helper.children().each(function(index) {
+	        $(this).width($originals.eq(index).width())
+	    });
+	    return $helper;
+	};
+
+	jQuery('#todosTable tBody').sortable({
+		helper: fixHelperModified
+	}).disableSelection();
+</script>
