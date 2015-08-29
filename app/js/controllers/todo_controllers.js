@@ -12,8 +12,11 @@ todoControllers.controller('RegistrationController', ['$scope', '$window', funct
 		  
 		  $scope.logout=function(){
 		  	Todo.endSession({
-		      success: function(todo) { $window.location.href='#'+todoApp.ROUTES.login; },
-		      error:   function(xhr)  { alert('logout error!') }
+		      success: function() { $window.location.href='#'+todoApp.ROUTES.login; },
+		      error:   function(xhr)  {
+		      	console.log('Error: '+xhr.responseText+','+xhr.status); 
+		      	$window.location.href='#'+todoApp.ROUTES.login; 
+		      }
 		    });
 		  };
 		  
