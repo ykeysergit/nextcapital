@@ -1,18 +1,59 @@
-todoControllers = angular.module('todoControllers', []);
+todoControllers = angular.module('todoControllers', ['ngCookies']);
 
-todoControllers.controller('RegistrationController', ['$scope', '$window', function ($scope, $window) {
+todoControllers.controller('RegistrationController', ['$scope', '$window', '$cookies', function ($scope, $window, $cookies) {
+		  var LOGIN_COOKIE_NAME='login';
+
+		  $scope.isRemembered=function(){
+		  	var foundCookie = $cookies.get(LOGIN_COOKIE_NAME);
+		  	return !jQuery.isBlank(foundCookie);
+		  };
+
+		  $scope.rememberMeFlag=$scope.isRemembered();
+		  
+		  // if already logged-in
+		  (function(){
+		  	if($scope.rememberMeFlag){
+		  		$window.location.href='#'+todoApp.ROUTES.todos;
+		  	}
+		  })()
+	
 		  $scope.login = function(){
 		  	Todo.startSession({
 		      email:    $scope.email,
 		      password: $scope.password,
-		      success:  function(user) { $window.location.href='#'+todoApp.ROUTES.todos; },
-		      error:    function(xhr)  { $window.location.href='#'+todoApp.ROUTES.signup; }
+		      success:  function(user) {
+		      		if(!$scope.isRemembered() && $scope.rememberMeFlag){
+		      			$scope.rememberMe(); 
+		      		}
+		      		
+		      		$window.location.href='#'+todoApp.ROUTES.todos; 
+		      	},
+		      error: function(xhr)  { $window.location.href='#'+todoApp.ROUTES.signup; }
 		    });
+		  };
+		  
+		  $scope.rememberMe=function(){
+		  	var options={
+		  		path: '/app',
+		  		expires: Date.today().add({months: 6})
+		  	};
+		  	
+		  	$cookies.put(LOGIN_COOKIE_NAME,$scope.email,options);
+		  	
+		  	var cookieSet = $cookies.get(LOGIN_COOKIE_NAME);
+		  	console.log('cookie set: '+JSON.stringify(cookieSet)+','+JSON.stringify(cookieSet.options));
+		  };
+		  
+		  $scope.forgetMe=function(){
+		  	$cookies.remove(LOGIN_COOKIE_NAME);
 		  };
 		  
 		  $scope.logout=function(){
 		  	Todo.endSession({
-		      success: function() { $window.location.href='#'+todoApp.ROUTES.login; },
+		      success: function() { 
+		      	$scope.forgetMe();
+		      	$window.location.href='#'+todoApp.ROUTES.login; 
+		      },
 		      error:   function(xhr)  {
 		      	console.log('Error: '+xhr.responseText+','+xhr.status); 
 		      	$window.location.href='#'+todoApp.ROUTES.login; 
@@ -118,7 +159,10 @@ todoControllers.controller('TodosController', ['$scope', '$window', function ($s
 				    success: function(todo) {
 				     	$scope.todo_placeholder.description='';
 				     	$scope.todo_placeholder.is_complete=false;
-				     	$scope.$apply(function(){$scope.todos.push(todo);});
+				     	$scope.$apply(function(){
+				     			$scope.todos.push(todo);
+				     			$scope.todos.sort(todoComparator);
+				     		});
 				     	console.log('todo created: '+JSON.stringify(todo));
 				     },
 				    error:   function()     { alert('todo create error!') }

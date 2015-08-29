@@ -20,6 +20,7 @@ todoApp.config(['$routeProvider',
         controller: 'RegistrationController'
       }).
       otherwise({
-        redirectTo: 'partials/404.html'
+        templateUrl: 'partials/login.html',
+        controller: 'RegistrationController'
       });
   }]);
