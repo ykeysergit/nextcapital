@@ -23,7 +23,13 @@
         <tr>
           <th>
           	<span>Todo Id</span>
-          	<span><i class="fa fa-arrow-circle-o-down"></i></span>
+          	<span ng-if="isDesc()">
+          		<a ng-click="sort(SORT_OPTIONS.ASC)" title="Descending order" class="fa fa-arrow-circle-o-down sort"></a>
+      		</span>
+      		
+          	<span ng-if="isAsc()">
+          		<a ng-click="sort(SORT_OPTIONS.DESC)" title="Ascending order" class="fa fa-arrow-circle-o-up sort"></a>
+      		</span>
           </th>
           
           <th>Description</th>

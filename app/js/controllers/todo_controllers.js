@@ -48,12 +48,23 @@ todoControllers.controller('TodosController', ['$scope', '$window', function ($s
 			
 			$scope.sortOption=$scope.SORT_OPTIONS.ASC;
 			
+			$scope.isAsc=function(){
+				return $scope.sortOption === $scope.SORT_OPTIONS.ASC; 
+			};
+			
+			$scope.isDesc=function(){
+				return $scope.sortOption === $scope.SORT_OPTIONS.DESC; 
+			};
+			
 			(function(){
 				Todo.loadTodos({
 			      success: function(todos) {
 			      	$scope.$apply(function(){$scope.todos=todos;});
 			      },
-			      error:   function(xhr)   { alert('todo load error!') }
+			      error:   function(xhr)   {
+			      	console.log('Error: '+xhr.responseText+','+xhr.status); 
+			      	$window.location.href='#'+todoApp.ROUTES.login; 
+		      		}
 			    });
 			})();
 			
@@ -68,8 +79,9 @@ todoControllers.controller('TodosController', ['$scope', '$window', function ($s
 							return (objLeft.id - objRight.id) * $scope.sortOption;
 					}
 			
-			$scope.sort=function(){
-				$scope.$apply(function(){$scope.todos.sort(todoComparator);});
+			$scope.sort=function(sortOption){
+				$scope.sortOption=sortOption;
+				$scope.todos.sort(todoComparator);
 			};
 			
 			$scope.update_todo=function(todoId){
