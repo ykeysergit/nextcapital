@@ -9,7 +9,9 @@ todoControllers.controller('RegistrationController', ['$scope', '$window', '$coo
 		  	   Todo API would be better served if it was written in
 		  	   Angular using $resource and $cookies.
 		  	*/
-		  	Todo.USER=user;
+		  	if(jQuery.isPlainObject(user)){
+		  		Todo.USER=user;
+		  	}
 		  	
 		  	return !jQuery.isBlank(user);
 		  };
