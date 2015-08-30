@@ -24,11 +24,11 @@
           <th>
           	<span>Todo Id</span>
           	<span ng-if="isDesc()">
-          		<a href='' ng-click="sort(SORT_OPTIONS.ASC)" title="Descending order" class="fa fa-arrow-circle-o-down sort"></a>
+          		<a href='' ng-click="sortAsc()" title="Descending order" class="fa fa-arrow-circle-o-down sort"></a>
       		</span>
       		
           	<span ng-if="isAsc()">
-          		<a href='' ng-click="sort(SORT_OPTIONS.DESC)" title="Ascending order" class="fa fa-arrow-circle-o-up sort"></a>
+          		<a href='' ng-click="sortDesc()" title="Ascending order" class="fa fa-arrow-circle-o-up sort"></a>
       		</span>
           </th>
           

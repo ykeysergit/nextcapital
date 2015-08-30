@@ -1,20 +1,14 @@
 todoControllers.controller('TodosController', ['$scope', '$window', function ($scope, $window) {
 			$scope.todos=[];
 			$scope.todo_placeholder={description:'',is_complete:false};
-			
-			$scope.SORT_OPTIONS={
-				ASC:1,
-				DESC:-1
-			};
-			
-			$scope.sortOption=$scope.SORT_OPTIONS.ASC;
+			var todoComparator=new todoApp.TodoComparator();
 			
 			$scope.isAsc=function(){
-				return $scope.sortOption === $scope.SORT_OPTIONS.ASC; 
+				return todoComparator.isAsc();
 			};
 			
 			$scope.isDesc=function(){
-				return $scope.sortOption === $scope.SORT_OPTIONS.DESC; 
+				return todoComparator.isDesc();
 			};
 			
 			(function(){
@@ -29,20 +23,19 @@ todoControllers.controller('TodosController', ['$scope', '$window', function ($s
 			    });
 			})();
 			
-			function todoComparator(objLeft,objRight){
-						if(!jQuery.isPlainObject(objLeft) ||
-							!jQuery.isPlainObject(objRight) ||
-							jQuery.type(objLeft.id) !== 'number' ||
-							jQuery.type(objRight.id) !== 'number'){
-							return 0;
-							}
-							
-							return (objLeft.id - objRight.id) * $scope.sortOption;
-					}
 			
-			$scope.sort=function(sortOption){
-				$scope.sortOption=sortOption;
-				$scope.todos.sort(todoComparator);
+			function sort(){
+				$scope.todos.sort(todoComparator.compare);
+			};
+			
+			$scope.sortAsc=function(){
+				todoComparator.setSortOption(todoApp.TodoComparator.SORT_OPTIONS.ASC);
+				sort();
+			};
+			
+			$scope.sortDesc=function(){
+				todoComparator.setSortOption(todoApp.TodoComparator.SORT_OPTIONS.DESC);
+				sort();
 			};
 			
 			$scope.update_todo=function(todoId){
@@ -81,7 +74,7 @@ todoControllers.controller('TodosController', ['$scope', '$window', function ($s
 				     	$scope.todo_placeholder.is_complete=false;
 				     	$scope.$apply(function(){
 				     			$scope.todos.push(todo);
-				     			$scope.todos.sort(todoComparator);
+				     			sort();
 				     		});
 				     	console.log('todo created: '+JSON.stringify(todo));
 				     },
